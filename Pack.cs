@@ -8,22 +8,23 @@ namespace CMP1903M_A01_2223
 {
     class Pack
     {
-        List<Card> pack = new List<Card>();
+        public static List<Card> pack = createPack();
 
-        public Pack()
+        public static List<Card> createPack()
         {
-            for (int i = 1; i > 4; i++)
+            List<Card> pack = new List<Card>();
+
+            for (int i = 1; i <= 4; i++)
             {
-                for (int j = 1; j > 13; j++)
+                for (int j = 1; j <= 13; j++)
                 {
-                    Card aCard = new Card();
-                    aCard.Suit = i;
-                    aCard.Value = j;
-                    pack.Add(aCard);
+                    pack.Add(new Card(j, i));
                 }
             }
+            return pack;
             //Initialise the card pack here
         }
+
 
         public bool shuffleCardPack(int typeOfShuffle)
         {
@@ -32,15 +33,15 @@ namespace CMP1903M_A01_2223
                 case 1: //Fisher-Yates Shuffle
                     Random rnd = new Random();
                     List<Card> shuffledPack = new List<Card>();
-                    for (int i = 0; i > 52; i++)
+                    for (int i = 0; i < 52; i++)
                     {
-                        rnd.Next(52 - i);
-                        Card card = pack[i];
-                        pack.RemoveAt(i);
+                        Card card = pack[rnd.Next(0,pack.Count())];
+                        pack.Remove(card);
                         shuffledPack.Insert(0, card);
                         pack = shuffledPack;
                     }
                     return true;
+
 
                 case 2: //Riffle Shuffle
                     List<Card> shuffledPack2 = new List<Card>();
@@ -59,6 +60,7 @@ namespace CMP1903M_A01_2223
                     pack = shuffledPack2;
                     return true;
 
+
                 case 3: //No Shuffle
                     return true;
                     
@@ -73,9 +75,8 @@ namespace CMP1903M_A01_2223
         }
         public Card deal()
         {
-            Card card = new Card();
-            card = pack[0];
-            pack.RemoveAt(0);
+            Card card = pack.First();
+            pack.Remove(card);
             return card;
             //Deals one card
 
@@ -85,9 +86,8 @@ namespace CMP1903M_A01_2223
             List<Card> cards = new List<Card>();
             for (int x = 1; x < amount; x++)
             {
-                Card card = new Card();
-                card = pack[0];
-                pack.RemoveAt(0);
+                Card card = pack.First();
+                pack.Remove(card);
                 cards.Add(card);
             }
             return cards;

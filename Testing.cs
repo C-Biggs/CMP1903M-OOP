@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace CMP1903M_A01_2223
 {
-    class Testing
+    public class Testing
     {
-        public Testing()
+        public static void Test()
         {
             Pack aPack = new Pack();
 
             aPack.shuffleCardPack(1);
 
-            Console.WriteLine(aPack.deal());
-            Console.WriteLine(aPack.dealCard(4));
+            Console.WriteLine(aPack.deal().ToString());
+            Console.WriteLine(aPack.dealCard(4).ToString());
         }
     }
 }
