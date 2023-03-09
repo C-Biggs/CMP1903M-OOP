@@ -12,6 +12,7 @@ namespace CMP1903M_A01_2223
         {
             Pack aPack = new Pack();
 
+
             aPack.shuffleCardPack(1);
 
             Console.WriteLine(aPack.deal().ToString());

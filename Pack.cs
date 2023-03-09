@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,56 +9,52 @@ namespace CMP1903M_A01_2223
 {
     class Pack
     {
-        public static List<Card> pack = createPack();
-
-        public static List<Card> createPack()
+        public List<Card> pack;
+        public Pack() //Initialise card pack 
         {
-            List<Card> pack = new List<Card>();
+            pack = new List<Card>();
 
-            for (int i = 1; i <= 4; i++)
+            foreach (Suit suit in Enum.GetValues(typeof(Suit))) //Nested foreach loops allow card creation for every value and suit 
             {
-                for (int j = 1; j <= 13; j++)
+                foreach (Value value in Enum.GetValues(typeof(Value)))
                 {
-                    pack.Add(new Card(j, i));
+                    pack.Add(new Card(suit, value)); //Adds the card to the pack list
                 }
             }
-            return pack;
-            //Initialise the card pack here
         }
-
 
         public bool shuffleCardPack(int typeOfShuffle)
         {
+            List<Card> shuffledPack = new List<Card>();
             switch (typeOfShuffle)
             {
                 case 1: //Fisher-Yates Shuffle
                     Random rnd = new Random();
-                    List<Card> shuffledPack = new List<Card>();
+                    
                     for (int i = 0; i < 52; i++)
                     {
-                        Card card = pack[rnd.Next(0,pack.Count())];
-                        pack.Remove(card);
-                        shuffledPack.Insert(0, card);
-                        pack = shuffledPack;
+                        Card tempCard = pack[rnd.Next(0,pack.Count())]; //Select a card at random from the pack and store it in a temporary variable
+                        pack.Remove(tempCard); //Remove the selected card from the original pack
+                        shuffledPack.Insert(0, tempCard); //Add selected card to a new list shuffledPack
+                        pack = shuffledPack; //Copy the sorted list back into the pack list
                     }
                     return true;
 
 
                 case 2: //Riffle Shuffle
-                    List<Card> shuffledPack2 = new List<Card>();
-                    List<Card> packA = new List<Card>();
+                    List<Card> packA = new List<Card>(); //Initialise two lists to represent the two halves of the pack
                     List<Card> packB = new List<Card>();
-                    for (int i = 0; i < 26; i++)
+                    for (int i = 0; i < 26; i++) //Itterate through the pack adding cards into the two halves
                     {
                         packA.Add(pack[i]);
                         packB.Add(pack[i + 26]);
                     }
-                    for (int i = 0; i < 26; i++)
+                    for (int i = 0; i < 26; i++) //Itterate through the two halves alternating which half to add a card back to the sorted list
                     {
-                        shuffledPack2.Add(packA[i]);
-                        shuffledPack2.Add(packB[i]);
+                        shuffledPack.Add(packA[i]);
+                        shuffledPack.Add(packB[i]);
                     }
-                    pack = shuffledPack2;
+                    pack = shuffledPack; //Copy the sorted list back into the pack list
                     return true;
 
 
@@ -66,31 +63,38 @@ namespace CMP1903M_A01_2223
                     
 
                 default:
-                    Console.WriteLine("Error: No Shuffle Type");
+                    Console.WriteLine("Error: No Shuffle Type"); //Exception handling if an invalid case is used to select a sort
                     return false;
-            }
-            
-            //Shuffles the pack based on the type of shuffle
+            }//Shuffles the pack based on the type of shuffle
 
         }
         public Card deal()
         {
-            Card card = pack.First();
-            pack.Remove(card);
-            return card;
+            if (pack.Count== 0) //Ensures the pack has cards in before trying to deal a card
+            {
+                throw new InvalidOperationException("No cards in pack");
+            }
+            Card card = pack.FirstOrDefault(); //Takes top card from the pack list
+            pack.Remove(card); //Removes the card from the pack list
+            return card; //Returns the dealt card
             //Deals one card
-
         }
+
+
         public List<Card> dealCard(int amount)
         {
-            List<Card> cards = new List<Card>();
-            for (int x = 1; x < amount; x++)
+            if (pack.Count == 0) //Ensures the pack has cards in before trying to deal cards
             {
-                Card card = pack.First();
-                pack.Remove(card);
-                cards.Add(card);
+                throw new InvalidOperationException("No cards in pack");            
             }
-            return cards;
+            List<Card> cards = new List<Card>(); //Initialises a list to store the cards to be dealt
+            for (int x = 1; x < amount; x++) //For loop to draw multiple cards
+            {
+                Card card = pack.FirstOrDefault(); //Takes top card from the pack list
+                pack.Remove(card); //Removes the card from the pack list
+                cards.Add(card); //Adds the card to the cards list
+            }
+            return cards; //Returns the cards list
             //Deals the number of cards specified by 'amount'
         }
     }
