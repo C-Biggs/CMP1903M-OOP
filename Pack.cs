@@ -68,7 +68,7 @@ namespace CMP1903M_A01_2223
             }//Shuffles the pack based on the type of shuffle
 
         }
-        public Card deal()
+        public Card dealCard()
         {
             if (pack.Count== 0) //Ensures the pack has cards in before trying to deal a card
             {
